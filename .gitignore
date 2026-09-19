@@ -1,0 +1,22 @@
+# Android/Gradle build output
+.gradle/
+build/
+*/build/
+.kotlin/
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Machine-specific Android SDK configuration
+local.properties
+
+# OS and generated folders
+.DS_Store
+captures/
+outputs/
+
+# Local source/archive material not required to build the app
+work/

@@ -1,0 +1,7 @@
+Bunker Sounds nature audio sources
+
+565045__jmehl__waterfall-creek.m4a
+655303__bernicetredoux__river-in-the-morning-ambiance.wav
+197220__jymdavis__creek-sounds-in-georgia.wav
+
+Original source: Freesound.org. Verify the individual license and attribution requirements before distributing the APK beyond personal use.

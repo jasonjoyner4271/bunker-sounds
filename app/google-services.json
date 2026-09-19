@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "370250562864",
+    "project_id": "bunker-sounds",
+    "storage_bucket": "bunker-sounds.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:370250562864:android:2ea568a4d6a38c6ef11cf5",
+        "android_client_info": {
+          "package_name": "com.bunkersounds.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqGF8SUQ4gF9sDUZdloxWjnE1o-DpexbM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
