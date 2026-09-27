@@ -51,7 +51,7 @@ import kotlin.random.Random
 private data class Sound(val name: String, val detail: String)
 private data class SavedScene(val levels: Map<String, Float>, val master: Float, val effect: String, val timer: Int)
 private data class ReverbProfile(val preset: Short, val direct: Float, val wet: Float, val feedback: Float, val natureGain: Float)
-private val sounds = listOf(Sound("Green noise", "Soft, balanced hush"), Sound("Brown noise", "Deep and warm"), Sound("Pink noise", "Gentle and even"), Sound("Grey noise", "Hearing-balanced hush"), Sound("White noise", "Bright and steady"), Sound("Box fan", "Steady low room hum"), Sound("Air conditioner", "Cool, even background hum"), Sound("Creek / river", "Georgia creek recording"), Sound("Morning river", "River ambience recording"), Sound("Waterfall", "Waterfall creek recording"))
+private val sounds = listOf(Sound("Air conditioner", "Cool, even background hum"), Sound("Box fan", "Steady low room hum"), Sound("Brown noise", "Deep and warm"), Sound("Green noise", "Soft, balanced hush"), Sound("Grey noise", "Hearing-balanced hush"), Sound("Pink noise", "Gentle and even"), Sound("White noise", "Bright and steady"), Sound("Creek / river", "Georgia creek recording"), Sound("Morning river", "River ambience recording"), Sound("Waterfall", "Waterfall creek recording"))
 private val soundDescriptions = mapOf(
     "Green noise" to "A soft, balanced hush with a gentle lift in the middle frequencies.",
     "Brown noise" to "Deep, powerful low-end rumble with a waterfall-like body.",
@@ -310,7 +310,7 @@ class MainActivity : ComponentActivity() {
             item { EffectSelector(selectedEffect, onSelect = { selectedEffect = it }) }
             item {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    OutlinedButton(onClick = { sceneNameDraft = ""; showSaveScene = true }, modifier = Modifier.weight(1f)) { Text("Save scene", color = Color.Red) }
+                    OutlinedButton(onClick = { sceneNameDraft = ""; showSaveScene = true }, modifier = Modifier.weight(1f), contentPadding = PaddingValues(horizontal = 6.dp)) { Text("Save scene", color = Color.Red, maxLines = 1, softWrap = false, fontSize = 12.sp) }
                     OutlinedButton(onClick = { exportBackup.launch("bunker-sounds-backup.json") }, modifier = Modifier.weight(1f)) { Text("Export", color = Color.Red) }
                     OutlinedButton(onClick = { importBackup.launch(arrayOf("application/json", "text/plain")) }, modifier = Modifier.weight(1f)) { Text("Import", color = Color.Red) }
                 }
