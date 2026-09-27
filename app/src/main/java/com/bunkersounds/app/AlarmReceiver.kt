@@ -9,6 +9,11 @@ import androidx.core.app.NotificationCompat
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
+        val changePreset = intent.getStringExtra("change_preset")
+        if (changePreset != null) {
+            context.startActivity(Intent(context, MainActivity::class.java).putExtra("change_preset", changePreset).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP))
+            return
+        }
         val manager = context.getSystemService(NotificationManager::class.java)
         manager.createNotificationChannel(NotificationChannel("bunker_alarm", "Bunker Sounds alarm", NotificationManager.IMPORTANCE_HIGH))
         val preset = intent.getStringExtra("wake_preset") ?: "Bunker Sounds"
