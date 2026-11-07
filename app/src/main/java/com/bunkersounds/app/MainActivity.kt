@@ -44,6 +44,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
+import kotlin.math.roundToInt
 import kotlin.math.sin
 import kotlin.math.tanh
 import kotlin.random.Random
@@ -343,8 +344,8 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
-            items(sounds) { sound -> Card(colors = CardDefaults.cardColors(containerColor = Color(0xCC101010))) { Column(Modifier.padding(14.dp)) { Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) { Column(Modifier.weight(1f)) { Text(sound.name, color = Color.White); Text(sound.detail, color = Color(0xFFB0B0B0), style = MaterialTheme.typography.bodySmall) }; IconButton(onClick = { soundInfo = sound }) { Text("i", color = Color.Red, fontSize = 18.sp) } }; Slider(value = levels[sound.name] ?: 0f, onValueChange = { value -> levels = if (mixMode) levels + (sound.name to value) else sounds.associate { it.name to if (it.name == sound.name) value else 0f }; engine.setLevels(levels, master) }, colors = SliderDefaults.colors(thumbColor = Color(0xB3FF0000), activeTrackColor = Color(0x66FF0000), inactiveTrackColor = Color(0x265A2020))) } } }
-            item { Text("MASTER VOLUME", color = Color.Red, style = MaterialTheme.typography.labelLarge); Slider(value = master, onValueChange = { master = it; engine.setLevels(levels, master) }, colors = SliderDefaults.colors(thumbColor = Color(0xB3FF0000), activeTrackColor = Color(0x66FF0000), inactiveTrackColor = Color(0x265A2020))) }
+            items(sounds) { sound -> Card(colors = CardDefaults.cardColors(containerColor = Color(0xCC101010))) { Column(Modifier.padding(14.dp)) { Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) { Column(Modifier.weight(1f)) { Text(sound.name, color = Color.White); Text(sound.detail, color = Color(0xFFB0B0B0), style = MaterialTheme.typography.bodySmall) }; IconButton(onClick = { soundInfo = sound }) { Text("i", color = Color.Red, fontSize = 18.sp) } }; VolumeControl(value = levels[sound.name] ?: 0f, onValueChange = { value -> levels = if (mixMode) levels + (sound.name to value) else sounds.associate { it.name to if (it.name == sound.name) value else 0f }; engine.setLevels(levels, master) }) } } }
+            item { Text("MASTER VOLUME", color = Color.Red, style = MaterialTheme.typography.labelLarge); VolumeControl(value = master, onValueChange = { master = it; engine.setLevels(levels, master) }) }
             item { Text("SLEEP TIMER", color = Color(0xFFA9D18E), style = MaterialTheme.typography.labelLarge); Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) { listOf(0, 15, 30, 60).forEach { minutes -> FilterChip(selected = timer == minutes, onClick = { timer = minutes }, label = { Text(if (minutes == 0) "Off" else "${minutes}m") }) } } }
             item { ScheduleChangeCard(context, scheduledChangeOn, scheduledChangeHour, scheduledChangeMinute, scheduledChangePreset, presets.keys.toList() + savedSceneNames, onSetTime = { h, m -> scheduledChangeHour = h; scheduledChangeMinute = m }, onToggle = { enabled -> scheduledChangeOn = enabled }, onPreset = { scheduledChangePreset = it }) }
             item { OutlinedButton(onClick = { nightLight = true }, modifier = Modifier.fillMaxWidth()) { Text("Open red night light", color = Color.Red) } }
@@ -412,6 +413,31 @@ private class NoiseEngine(private val context: Context) {
 }
 
 @Composable private fun BunkerTheme(content: @Composable () -> Unit) { MaterialTheme(colorScheme = darkColorScheme(primary = Color.Red, onPrimary = Color.White, surface = Color.Black, background = Color.Black), content = content) }
+
+@Composable private fun VolumeControl(value: Float, onValueChange: (Float) -> Unit, modifier: Modifier = Modifier) {
+    val clampedValue = value.coerceIn(0f, 1f)
+    val percent = (clampedValue * 100f).roundToInt()
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        Row(Modifier.fillMaxWidth(), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+            Slider(
+                value = clampedValue,
+                onValueChange = { onValueChange(it.coerceIn(0f, 1f)) },
+                modifier = Modifier.weight(1f),
+                colors = SliderDefaults.colors(thumbColor = Color(0xB3FF0000), activeTrackColor = Color(0x66FF0000), inactiveTrackColor = Color(0x265A2020))
+            )
+            Column(Modifier.width(48.dp), horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally) {
+                IconButton(onClick = { onValueChange((clampedValue + .01f).coerceAtMost(1f)) }, modifier = Modifier.size(28.dp)) { Text("▲", color = Color.Red, fontSize = 12.sp) }
+                Text("$percent%", color = Color.White, style = MaterialTheme.typography.labelSmall)
+                IconButton(onClick = { onValueChange((clampedValue - .01f).coerceAtLeast(0f)) }, modifier = Modifier.size(28.dp)) { Text("▼", color = Color.Red, fontSize = 12.sp) }
+            }
+        }
+        Row(Modifier.fillMaxWidth().padding(end = 48.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+            listOf(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100).forEach { mark ->
+                Text(if (mark % 25 == 0) "$mark" else "·", color = Color(0xFF9A9A9A), style = MaterialTheme.typography.labelSmall)
+            }
+        }
+    }
+}
 
 @Composable private fun ScheduleChangeCard(context: Context, enabled: Boolean, hour: Int, minute: Int, preset: String, options: List<String>, onSetTime: (Int, Int) -> Unit, onToggle: (Boolean) -> Unit, onPreset: (String) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
