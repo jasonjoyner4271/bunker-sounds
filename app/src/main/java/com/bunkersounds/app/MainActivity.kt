@@ -29,7 +29,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.Dialog
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -39,8 +38,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
@@ -259,8 +258,7 @@ class MainActivity : ComponentActivity() {
         }
     }
     Surface(color = Color.Black, modifier = Modifier.fillMaxSize()) {
-        Box(Modifier.fillMaxSize()) {
-            Image(painter = androidx.compose.ui.res.painterResource(com.bunkersounds.app.R.drawable.angel), contentDescription = "Angel sleeping", contentScale = ContentScale.Crop, alpha = .5f, modifier = Modifier.fillMaxSize())
+        Box(Modifier.fillMaxSize().background(Brush.radialGradient(colors = listOf(Color(0xFF303030), Color(0xFF111111), Color.Black), radius = 1100f))) {
             LazyColumn(contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
             item { Text("BUNKER SOUNDS", style = MaterialTheme.typography.headlineMedium, color = Color(0xFFD9E8D0)); Text("A quiet place to land.", color = Color(0xFF9EB19A)); Spacer(Modifier.height(6.dp)); Text("Currently playing", color = Color.Red, style = MaterialTheme.typography.labelLarge); Text(if (playing) (selectedPreset ?: levels.filter { it.value > 0f }.keys.joinToString(" + ").ifBlank { "Custom mix" }) else "Nothing playing", color = Color.White, style = MaterialTheme.typography.bodyLarge) }
             item { Card(colors = CardDefaults.cardColors(containerColor = Color(0xCC1B251E))) { Column(Modifier.padding(16.dp)) { Text(if (playing) "Playing your mix" else "Ready when you are", color = Color.White); Spacer(Modifier.height(8.dp)); Button(onClick = { playing = !playing; if (playing) { sessionId = usage.start(selectedPreset ?: "Custom mix"); engine.start() } else { if (sessionId != 0L) usage.stop(sessionId); engine.stop() } }, modifier = Modifier.fillMaxWidth()) { Text(if (playing) "Pause mix" else "Start mix") } } } }
